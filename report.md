@@ -120,8 +120,8 @@ The decision to use a lightweight `MiniLM` model allows the semantic layer to ru
 
 **1. Clone and Environment Setup**
 ```bash
-git clone https://github.com/organization/medbot.git
-cd medbot
+git clone https://github.com/panosgeorgakopoulos/MedBot.git
+cd MedBot
 python3 -m venv venv
 source venv/bin/activate
 ```

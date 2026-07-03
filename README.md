@@ -25,8 +25,8 @@ MedBot is a natural language understanding system designed for a Greek hospital 
 
 1. **Clone the repository and set up a virtual environment:**
    ```bash
-   git clone https://github.com/organization/medbot.git
-   cd medbot
+   git clone https://github.com/panosgeorgakopoulos/MedBot.git
+   cd MedBot
    python3 -m venv venv
    source venv/bin/activate
    ```
@@ -72,7 +72,7 @@ PYTHONPATH=. python3 gradio_app.py
 ## 📂 Project Structure
 
 ```text
-medbot/
+MedBot/
 ├── src/                        # Core application logic
 │   ├── parser.py               # Layer 1 symbolic parser
 │   ├── world.py                # Hospital microworld state and dataclasses
