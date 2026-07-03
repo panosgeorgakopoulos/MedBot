@@ -85,7 +85,3 @@ MedBot/
 ├── gradio_app.py               # Interactive web UI launch script
 └── report.md                   # Final academic report answering rubric questions
 ```
-
-## 👥 Authors
-- **Georgakopoulos Panagiotis Sergios** - P23024
-- **Dimitriou Konstantinos** - P23040
