@@ -20,7 +20,7 @@ Building on Winograd's SHRDLU, MedBot adapts symbolic grounded language to a mod
 The foundational layer relies on explicit, deterministic rules built in Python. 
 - **World Representation**: The world (`src/world.py`) models 17 distinct medical objects across 4 zones (Φαρμακείο, ΜΕΘ, Αποθήκη, Θάλαμος). Objects possess attributes (category, size, refrigeration requirements), and their inventory levels and expiration dates are meticulously tracked across zones using a multi-location `Batch` system. Spatial relations include `on`, `inside`, and `next_to`.
 - **Parsing**: A rule-based parser (`src/parser.py`) uses exact Regular Expressions to map Greek verbs to specific intents (e.g., `φέρε`, `πάρε` -> `FETCH`). Slots like size and state are extracted through hardcoded keyword matches. 
-- **Dialogue Context (Optional Extension)**: The system maintains conversational context across multiple turns via `src/context.py`. If a user types "Δώσε την" (Give it), the system resolves the pronoun by retrieving the last mentioned object from the context state.
+- **Dialogue Context (Optional Extension)**: The system maintains conversational context across multiple turns via `src/context.py`. If a user types "Δώσε την" (Give it), the system resolves the pronoun by retrieving the last mentioned object from the context state. Additionally, it tracks active clarifications; if a user asks for plural items without a quantity (e.g. "Δώσε μου σύριγγες"), the system pauses execution, prompts the user, and merges the subsequent numerical answer into the suspended action state.
 - **Planner Execution**: Resolved intents pass to `planner.py`, which rigorously checks preconditions (e.g., ensuring a drug is not expired and checking role-based authorization) before mutating the world state.
 
 #### 3.2 Stage 2: Classical & Sequence Models
@@ -56,7 +56,7 @@ The system feels significantly more intelligent due to its fallback routing. The
 The rule-based parser was extremely precise and computationally lightweight (near 0 latency) for strict templates. Precondition checking (preventing the dispensing of expired drugs) integrated seamlessly into the deterministic execution flow.
 
 **(2) What kinds of language broke the rule-based parser?**
-Elliptical commands ("έλεγξε τα ληγμένα"), unexpected synonyms, and highly paraphrased inputs caused catastrophic failures in the rule-based parser. Misspellings and morphological variations also easily bypassed the strict regex filters.
+Elliptical commands ("έλεγξε τα ληγμένα"), unexpected synonyms, and highly paraphrased inputs caused catastrophic failures in the rule-based parser. Misspellings and morphological variations also easily bypassed the strict regex filters. Furthermore, nuances in phrasing, such as distinguishing "δώσε μου" (Fetch for me) from "δώσε" (Give to patient), required careful heuristic tuning to prevent mapping to the wrong underlying state mutation.
 
 **(3) Did the sequence model improve robustness and on which tasks?**
 Yes. The classical machine learning intent classifier significantly improved accuracy on the stress test subset, correctly mapping noisy and elliptical inputs to their intents by relying on learned n-gram features rather than exact word matches. The CRF tagger improved the extraction of spatial and state constraints.

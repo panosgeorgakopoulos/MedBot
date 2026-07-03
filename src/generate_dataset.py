@@ -15,7 +15,7 @@ def generate_templates():
     data = []
     
     # FETCH
-    fetch_verbs = ["Φέρε", "Φέρτε", "Πάρε", "Παρέδωσε", "Φέρε μου"]
+    fetch_verbs = ["Φέρε", "Φέρτε", "Πάρε", "Παρέδωσε", "Φέρε μου", "Δώσε μου"]
     for i in range(150):
         v = random.choice(fetch_verbs)
         n = random.choice(nouns)

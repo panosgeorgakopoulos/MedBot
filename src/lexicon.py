@@ -65,5 +65,9 @@ def extract_quantity_and_assumptions(text: str) -> tuple:
     if match:
         return (float(match.group(1)), None)
         
+    # 5. Check if plural was used without a number
+    plurals = ['γάζες', 'επιδέσμους', 'επίδεσμοι', 'σύριγγες', 'βελόνες', 'αντιβιοτικά', 'σφυγμόμετρα', 'οξύμετρα', 'θερμόμετρα', 'κουτιά', 'παρακεταμόλες', 'ιβουπροφένες', 'φάρμακα']
+    if any(re.search(r'\b' + p + r'\b', text) for p in plurals):
+        return (None, "Plural noun used without explicit quantity")
+        
     return (1.0, None) # Default quantity
-

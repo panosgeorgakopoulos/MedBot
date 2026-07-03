@@ -12,7 +12,7 @@ MedBot is a natural language understanding system designed for a Greek hospital 
   - **Layer 2 (Classical ML):** Logistic Regression classifier and Conditional Random Field (CRF) tagger to handle noisy or elliptical inputs via learned n-grams.
   - **Layer 3 (Semantic Embeddings):** Hugging Face Transformer model (`paraphrase-multilingual-MiniLM-L12-v2`) for complex semantic matching and out-of-vocabulary terms.
 - **Strict Clinical Constraints:** Deterministic planner execution checks expiration dates, inventory levels, and role-based access before mutating state.
-- **Context-Aware Dialogue:** Context recency enables seamless pronoun resolution across conversation turns.
+- **Context-Aware Dialogue:** Context recency enables seamless pronoun resolution across conversation turns. The system also supports multi-turn clarifications, pausing execution to ask for missing information (e.g., quantities for plural nouns) and seamlessly resuming.
 - **Privacy-First:** Redaction of Patient Health Information (PHI) via `anonymize_log.py` to ensure GDPR compliance.
 - **Interactive UI:** Built-in Gradio dashboard for live simulation and audit logging.
 

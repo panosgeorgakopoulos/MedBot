@@ -7,7 +7,7 @@ def parse_command(command: str) -> Dict[str, Any]:
     
     # 1. Intent Detection
     intent = None
-    if re.search(r'\b(φέρε|φέρτε|πάρε|παρέδωσε)\b', command):
+    if re.search(r'\b(φέρε|φέρτε|πάρε|παρέδωσε|δώσε μου)\b', command):
         intent = "FETCH"
     elif re.search(r'\b(βάλε|τοποθέτησε|άφησε)\b', command):
         intent = "PLACE"

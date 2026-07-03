@@ -38,7 +38,7 @@ class UnifiedResolver:
 
     def _fallback_intent_heuristics(self, utterance: str):
         utt = utterance.lower()
-        if re.search(r'\b(fetch|get|bring|give me|φέρε|πάρε|make|κάνε)\b', utt): return "FETCH"
+        if re.search(r'\b(fetch|get|bring|give me|δώσε μου|φέρε|πάρε|make|κάνε)\b', utt): return "FETCH"
         if re.search(r'\b(place|put|drop|βάλε)\b', utt): return "PLACE"
         if re.search(r'\b(open|unlock|άνοιξε)\b', utt): return "OPEN"
         if re.search(r'\b(close|shut|κλείσε)\b', utt): return "CLOSE"
@@ -57,6 +57,28 @@ class UnifiedResolver:
         
         utt_clean = self.strip_accents(utterance)
         
+        if context.awaiting_clarification:
+            parsed_test = parse_command(full_utterance)
+            # If no new intent is found and we managed to get a quantity, resolve it
+            if not parsed_test.get("intent") and not self._fallback_intent_heuristics(utterance):
+                if lexicon_qty is not None:
+                    intent = context.clarification_intent
+                    obj_id = context.clarification_object
+                    context.awaiting_clarification = False
+                    context.clarification_intent = None
+                    context.clarification_object = None
+                    
+                    action_req = dict(action_dict)
+                    action_req["action"] = intent
+                    action_req["object_id"] = obj_id
+                    action_req["quantity"] = lexicon_qty
+                    return {"intent": intent, "object_id": obj_id, "layer": "Layer 1 (Context Recency)", "confidence": 1.0, "error": None, "action_req": action_req}
+            
+            # Otherwise, clear the state and process as a new command
+            context.awaiting_clarification = False
+            context.clarification_intent = None
+            context.clarification_object = None
+            
         intent = action_dict.get("action")
         obj_id = None
         layer = None
@@ -184,6 +206,12 @@ class UnifiedResolver:
             if not intent and not obj_id:
                  return {"intent": None, "object_id": None, "layer": "Layer 4 (OOD)", "confidence": 0.0, "error": "This seems out of scope for my hospital duties."}
             return {"intent": intent, "object_id": obj_id, "layer": "Layer 4 (Clarification)", "confidence": 0.0, "error": "Δεν είμαι σίγουρος/η. Παρακαλώ διευκρινίστε την εντολή ή το αντικείμενο. (I am not sure, please clarify)."}
+            
+        if lexicon_qty is None:
+             context.awaiting_clarification = True
+             context.clarification_intent = intent
+             context.clarification_object = obj_id
+             return {"intent": intent, "object_id": obj_id, "layer": "Layer 4 (Clarification)", "confidence": 0.0, "error": "Πόσα τεμάχια χρειάζεστε; (How many do you need?)"}
             
         action_req["action"] = intent
         action_req["object_id"] = obj_id
