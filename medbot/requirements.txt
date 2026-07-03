@@ -1,0 +1,8 @@
+pytest==8.0.0
+scikit-learn
+sklearn-crfsuite
+sentence-transformers
+gradio
+rapidfuzz
+transformers
+torch
